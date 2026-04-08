@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>게시글 목록</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="page-header">
+      <h1>간단한 게시판</h1>
+      <nav class="nav">
+        <a href="list.html" class="active">게시글 목록</a>
+        <a href="create.html">게시글 등록</a>
+      </nav>
+    </header>
+
+    <section class="card">
+      <div class="section-top">
+        <h2>게시글 목록</h2>
+        <a href="create.html" class="button-link">글쓰기</a>
+      </div>
+
+      <table class="post-table">
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회수</th>
+          </tr>
+        </thead>
+        <tbody id="postList"></tbody>
+      </table>
+
+      <p id="emptyMessage" class="empty-message" style="display: none;">
+        아직 등록된 게시글이 없습니다.
+      </p>
+    </section>
+  </div>
+
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/list.js"></script>
+</body>
+</html>

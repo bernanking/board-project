@@ -18,7 +18,7 @@ function initializePosts() {
         id: 2,
         title: "두 번째 게시글입니다",
         writer: "요한",
-        content: "게시판 수정 기능을 실습하는 중입니다.",
+        content: "게시판 삭제 기능을 실습하는 중입니다.",
         createdAt: "2026-04-05",
         views: 0
       }
@@ -107,6 +107,19 @@ function updatePost(id, updatedData) {
 
   savePosts(updatedPosts);
   return updatedPost;
+}
+
+// 게시글 삭제
+function deletePost(id) {
+  const posts = getPosts();
+  const filteredPosts = posts.filter((post) => post.id !== id);
+
+  if (posts.length === filteredPosts.length) {
+    return false;
+  }
+
+  savePosts(filteredPosts);
+  return true;
 }
 
 // 조회수 증가

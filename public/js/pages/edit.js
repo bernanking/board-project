@@ -4,6 +4,13 @@ const contentInput = document.getElementById("content");
 const updateBtn = document.getElementById("updateBtn");
 
 async function fillEditForm() {
+  const user = await renderAuthArea();
+  if (!user) {
+    alert("로그인이 필요합니다.");
+    location.href = "./login.html";
+    return;
+  }
+
   const postId = getPostIdFromUrl();
 
   if (!postId) {
@@ -14,6 +21,12 @@ async function fillEditForm() {
 
   try {
     const post = await getPostById(postId);
+
+    if (!post.canEdit) {
+      alert("본인 게시글만 수정할 수 있습니다.");
+      location.href = `./detail.html?id=${postId}`;
+      return;
+    }
 
     titleInput.value = post.title;
     writerInput.value = post.writer;
@@ -27,18 +40,16 @@ async function fillEditForm() {
 updateBtn.addEventListener("click", async function () {
   const postId = getPostIdFromUrl();
   const title = titleInput.value.trim();
-  const writer = writerInput.value.trim();
   const content = contentInput.value.trim();
 
-  if (!title || !writer || !content) {
-    alert("제목, 작성자, 내용을 모두 입력해주세요.");
+  if (!title || !content) {
+    alert("제목과 내용을 모두 입력해주세요.");
     return;
   }
 
   try {
     await updatePost(postId, {
       title,
-      writer,
       content
     });
 

@@ -13,7 +13,10 @@
       <nav class="nav">
         <a href="./list.html" class="active">게시글 목록</a>
         <a href="./create.html">게시글 등록</a>
+        <a href="./login.html">로그인</a>
+        <a href="./signup.html">회원가입</a>
       </nav>
+      <div id="authArea" class="auth-area"></div>
     </header>
 
     <section class="card">
@@ -25,14 +28,18 @@
 
       <div class="button-group">
         <a href="./list.html" class="button-link secondary">목록으로</a>
-        <a id="editLink" href="#" class="button-link">수정하기</a>
-        <button id="deleteBtn">삭제하기</button>
+        <div id="ownerActions" class="button-group" style="display: none;">
+          <a id="editLink" href="#" class="button-link">수정하기</a>
+          <button id="deleteBtn">삭제하기</button>
+        </div>
       </div>
     </section>
   </div>
 
   <script src="../js/api/postsApi.js"></script>
+  <script src="../js/api/usersApi.js"></script>
   <script src="../js/utils/url.js"></script>
+  <script src="../js/utils/auth.js"></script>
   <script src="../js/pages/detail.js"></script>
 </body>
 </html>

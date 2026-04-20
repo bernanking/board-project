@@ -13,13 +13,17 @@
       <nav class="nav">
         <a href="list.html" class="active">게시글 목록</a>
         <a href="create.html">게시글 등록</a>
+        <a href="login.html">로그인</a>
+        <a href="signup.html">회원가입</a>
+        <a href="find-id.html">아이디 찾기</a>
       </nav>
+      <div id="authArea" class="auth-area"></div>
     </header>
 
     <section class="card">
       <div class="section-top">
         <h2>게시글 목록</h2>
-        <a href="create.html" class="button-link">글쓰기</a>
+        <a id="writeLink" href="create.html" class="button-link" style="display: none;">글쓰기</a>
       </div>
 
       <table class="post-table">
@@ -42,6 +46,8 @@
   </div>
 
   <script src="../js/api/postsApi.js"></script>
+  <script src="../js/api/usersApi.js"></script>
+  <script src="../js/utils/auth.js"></script>
   <script src="../js/pages/list.js"></script> 
 </body>
 </html>

@@ -7,14 +7,15 @@ const {
   increaseViewCount,
   updateExistingPost
 } = require("../controllers/postsController");
+const { requireLogin } = require("../middlewares/auth");
 
 const router = express.Router();
 
 router.get("/", getPosts);
 router.get("/:id", getPost);
-router.post("/", createNewPost);
-router.put("/:id", updateExistingPost);
-router.delete("/:id", deleteExistingPost);
+router.post("/", requireLogin, createNewPost);
+router.put("/:id", requireLogin, updateExistingPost);
+router.delete("/:id", requireLogin, deleteExistingPost);
 router.post("/:id/view", increaseViewCount);
 
 module.exports = router;

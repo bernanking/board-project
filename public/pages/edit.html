@@ -13,7 +13,10 @@
       <nav class="nav">
         <a href="./list.html">게시글 목록</a>
         <a href="./create.html">게시글 등록</a>
+        <a href="./login.html">로그인</a>
+        <a href="./signup.html">회원가입</a>
       </nav>
+      <div id="authArea" class="auth-area"></div>
     </header>
 
     <section class="card">
@@ -26,7 +29,7 @@
 
       <div class="form-group">
         <label for="writer">작성자</label>
-        <input type="text" id="writer" placeholder="작성자를 입력하세요" />
+        <input type="text" id="writer" placeholder="작성자" readonly />
       </div>
 
       <div class="form-group">
@@ -42,7 +45,9 @@
   </div>
 
   <script src="../js/api/postsApi.js"></script>
+  <script src="../js/api/usersApi.js"></script>
   <script src="../js/utils/url.js"></script>
+  <script src="../js/utils/auth.js"></script>
   <script src="../js/pages/edit.js"></script>
 </body>
 </html>

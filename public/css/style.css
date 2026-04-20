@@ -45,6 +45,19 @@ body {
   color: #fff;
 }
 
+.auth-area {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  align-items: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.auth-welcome {
+  font-weight: bold;
+}
+
 .card {
   background-color: #fff;
   padding: 24px;
@@ -110,14 +123,20 @@ button:hover,
   background-color: #6b7280;
 }
 
-.button-link.secondary:hover {
+.button-link.secondary:hover,
+button.secondary:hover {
   background-color: #4b5563;
+}
+
+button.secondary {
+  background-color: #6b7280;
 }
 
 .button-group {
   display: flex;
   gap: 10px;
   margin-top: 20px;
+  flex-wrap: wrap;
 }
 
 .post-table {
@@ -174,4 +193,21 @@ button:hover,
 .detail-content {
   line-height: 1.7;
   white-space: pre-wrap;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.checkbox-row input {
+  width: auto;
+}
+
+.result-box {
+  margin-top: 20px;
+  font-weight: bold;
+  color: #2563eb;
 }

@@ -18,25 +18,25 @@ function mapPost(row) {
     writer: row.writer,
     content: row.content,
     createdAt: row.created_at,
-    views: row.views
+    views: row.views,
+    canEdit: false
   };
 }
 
 function validatePostInput(body) {
   const title = body.title?.trim();
-  const writer = body.writer?.trim();
   const content = body.content?.trim();
 
-  if (!title || !writer || !content) {
+  if (!title || !content) {
     return {
       isValid: false,
-      message: "제목, 작성자, 내용을 모두 입력해주세요."
+      message: "제목과 내용을 모두 입력해주세요."
     };
   }
 
   return {
     isValid: true,
-    value: { title, writer, content }
+    value: { title, content }
   };
 }
 
@@ -52,7 +52,12 @@ function getToday() {
 async function getPosts(req, res, next) {
   try {
     const rows = await listPosts();
-    res.json(rows.map(mapPost));
+    res.json(
+      rows.map((row) => ({
+        ...mapPost(row),
+        canEdit: Boolean(req.session.user && req.session.user.username === row.writer)
+      }))
+    );
   } catch (error) {
     next(error);
   }
@@ -67,7 +72,10 @@ async function getPost(req, res, next) {
       return;
     }
 
-    res.json(mapPost(post));
+    res.json({
+      ...mapPost(post),
+      canEdit: Boolean(req.session.user && req.session.user.username === post.writer)
+    });
   } catch (error) {
     next(error);
   }
@@ -82,12 +90,16 @@ async function createNewPost(req, res, next) {
       return;
     }
 
-    const { title, writer, content } = validation.value;
+    const { title, content } = validation.value;
     const createdAt = getToday();
+    const writer = req.session.user.username;
     const result = await createPost({ title, writer, content, createdAt });
     const createdPost = await findPostById(result.lastID);
 
-    res.status(201).json(mapPost(createdPost));
+    res.status(201).json({
+      ...mapPost(createdPost),
+      canEdit: true
+    });
   } catch (error) {
     next(error);
   }
@@ -95,6 +107,18 @@ async function createNewPost(req, res, next) {
 
 async function updateExistingPost(req, res, next) {
   try {
+    const existingPost = await findPostById(req.params.id);
+
+    if (!existingPost) {
+      res.status(404).json({ message: "수정할 게시글을 찾을 수 없습니다." });
+      return;
+    }
+
+    if (existingPost.writer !== req.session.user.username) {
+      res.status(403).json({ message: "본인 게시글만 수정할 수 있습니다." });
+      return;
+    }
+
     const validation = validatePostInput(req.body);
 
     if (!validation.isValid) {
@@ -102,16 +126,26 @@ async function updateExistingPost(req, res, next) {
       return;
     }
 
-    const { title, writer, content } = validation.value;
-    const result = await updatePost(req.params.id, { title, writer, content });
+    const { title, content } = validation.value;
+    const result = await updatePost(req.params.id, {
+      title,
+      writer: req.session.user.username,
+      content
+    });
 
     if (result.changes === 0) {
-      res.status(404).json({ message: "수정할 게시글을 찾을 수 없습니다." });
+      res.json({
+        ...mapPost(existingPost),
+        canEdit: true
+      });
       return;
     }
 
     const updatedPost = await findPostById(req.params.id);
-    res.json(mapPost(updatedPost));
+    res.json({
+      ...mapPost(updatedPost),
+      canEdit: true
+    });
   } catch (error) {
     next(error);
   }
@@ -119,6 +153,18 @@ async function updateExistingPost(req, res, next) {
 
 async function deleteExistingPost(req, res, next) {
   try {
+    const existingPost = await findPostById(req.params.id);
+
+    if (!existingPost) {
+      res.status(404).json({ message: "삭제할 게시글을 찾을 수 없습니다." });
+      return;
+    }
+
+    if (existingPost.writer !== req.session.user.username) {
+      res.status(403).json({ message: "본인 게시글만 삭제할 수 있습니다." });
+      return;
+    }
+
     const result = await removePost(req.params.id);
 
     if (result.changes === 0) {
@@ -142,7 +188,10 @@ async function increaseViewCount(req, res, next) {
     }
 
     const post = await findPostById(req.params.id);
-    res.json(mapPost(post));
+    res.json({
+      ...mapPost(post),
+      canEdit: Boolean(req.session.user && req.session.user.username === post.writer)
+    });
   } catch (error) {
     next(error);
   }

@@ -1,6 +1,32 @@
 const detailBox = document.getElementById("detailBox");
 const editLink = document.getElementById("editLink");
 const deleteBtn = document.getElementById("deleteBtn");
+const ownerActions = document.getElementById("ownerActions");
+
+function renderError(message) {
+  detailBox.innerHTML = "";
+  const text = document.createElement("p");
+  text.textContent = message;
+  detailBox.appendChild(text);
+}
+
+function renderPost(post) {
+  detailBox.innerHTML = "";
+
+  const title = document.createElement("h3");
+  title.className = "detail-title";
+  title.textContent = post.title;
+
+  const meta = document.createElement("div");
+  meta.className = "detail-meta";
+  meta.textContent = `작성자: ${post.writer} | 작성일: ${post.createdAt} | 조회수: ${post.views}`;
+
+  const content = document.createElement("div");
+  content.className = "detail-content";
+  content.textContent = post.content;
+
+  detailBox.append(title, meta, content);
+}
 
 async function renderDetail() {
   const postId = getPostIdFromUrl();
@@ -13,18 +39,14 @@ async function renderDetail() {
   }
 
   try {
+    await renderAuthArea();
     const post = await increaseViews(postId);
 
     editLink.href = `./edit.html?id=${post.id}`;
-    detailBox.innerHTML = `
-      <h3 class="detail-title">${post.title}</h3>
-      <div class="detail-meta">
-        작성자: ${post.writer} | 작성일: ${post.createdAt} | 조회수: ${post.views}
-      </div>
-      <div class="detail-content">${post.content}</div>
-    `;
+    ownerActions.style.display = post.canEdit ? "flex" : "none";
+    renderPost(post);
   } catch (error) {
-    detailBox.innerHTML = `<p>${error.message}</p>`;
+    renderError(error.message);
     editLink.style.display = "none";
     deleteBtn.style.display = "none";
   }

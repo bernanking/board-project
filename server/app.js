@@ -35,7 +35,7 @@ app.use("/api/posts", postsRouter);
 app.use("/api/users", usersRouter);
 
 app.get("/", (req, res) => {
-  res.redirect("/pages/list.html");
+  res.redirect("/pages/login.html");
 });
 
 // 서버가 켜졌는지 확인용

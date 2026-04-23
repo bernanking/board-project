@@ -10,11 +10,17 @@ function createCell(text) {
 
 async function renderPostList() {
   try {
-    const currentUser = await renderAuthArea();
+    const currentUser = await requireLoggedIn();
+
+    if (!currentUser) {
+      return;
+    }
+
+    await renderAuthArea();
     const posts = await getPosts();
 
     postList.innerHTML = "";
-    writeLink.style.display = currentUser ? "inline-block" : "none";
+    writeLink.style.display = "inline-block";
 
     if (posts.length === 0) {
       emptyMessage.style.display = "block";

@@ -33,8 +33,7 @@ async function renderDetail() {
 
   if (!postId) {
     detailBox.innerHTML = "<p>잘못된 접근입니다.</p>";
-    editLink.style.display = "none";
-    deleteBtn.style.display = "none";
+    ownerActions.hidden = true;
     return;
   }
 
@@ -43,12 +42,11 @@ async function renderDetail() {
     const post = await increaseViews(postId);
 
     editLink.href = `./edit.html?id=${post.id}`;
-    ownerActions.style.display = post.canEdit ? "flex" : "none";
+    ownerActions.hidden = !post.canEdit;
     renderPost(post);
   } catch (error) {
     renderError(error.message);
-    editLink.style.display = "none";
-    deleteBtn.style.display = "none";
+    ownerActions.hidden = true;
   }
 }
 

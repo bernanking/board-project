@@ -10,6 +10,17 @@ async function requireLoggedIn() {
   return session.user;
 }
 
+async function redirectToListIfLoggedIn() {
+  const session = await getCurrentUser();
+
+  if (session.isLoggedIn) {
+    location.href = "./list.html";
+    return true;
+  }
+
+  return false;
+}
+
 async function renderAuthArea() {
   const authArea = document.getElementById("authArea");
 
@@ -22,42 +33,35 @@ async function renderAuthArea() {
     authArea.innerHTML = "";
 
     if (session.isLoggedIn) {
+      authArea.className = "auth-area";
+
       const welcome = document.createElement("span");
-      welcome.className = "auth-welcome";
+      welcome.className = "auth-welcome badge rounded-pill text-bg-light border text-dark";
       welcome.textContent = `${session.user.name}님 로그인 중`;
 
       const changePasswordLink = document.createElement("a");
       changePasswordLink.href = "./change-password.html";
-      changePasswordLink.className = "button-link secondary";
+      changePasswordLink.className = "btn btn-outline-secondary btn-sm";
       changePasswordLink.textContent = "비밀번호 변경";
 
       const logoutButton = document.createElement("button");
       logoutButton.type = "button";
-      logoutButton.className = "secondary";
+      logoutButton.className = "btn btn-danger btn-sm";
       logoutButton.textContent = "로그아웃";
       logoutButton.addEventListener("click", async () => {
         await logOutUser();
-        location.href = "./list.html";
+        location.href = "./login.html";
       });
 
       authArea.append(welcome, changePasswordLink, logoutButton);
       return session.user;
     }
 
-    const loginLink = document.createElement("a");
-    loginLink.href = "./login.html";
-    loginLink.className = "button-link";
-    loginLink.textContent = "로그인";
-
-    const signupLink = document.createElement("a");
-    signupLink.href = "./signup.html";
-    signupLink.className = "button-link secondary";
-    signupLink.textContent = "회원가입";
-
-    authArea.append(loginLink, signupLink);
+    authArea.className = "auth-area d-none";
     return null;
   } catch (error) {
     authArea.textContent = "로그인 정보를 불러오지 못했습니다.";
+    authArea.className = "auth-area text-secondary small";
     return null;
   }
 }

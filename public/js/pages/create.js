@@ -1,9 +1,13 @@
+const createForm = document.getElementById("createForm");
 const titleInput = document.getElementById("title");
 const writerInput = document.getElementById("writer");
 const contentInput = document.getElementById("content");
-const saveBtn = document.getElementById("saveBtn");
 
 async function initializeCreatePage() {
+  if (!writerInput) {
+    return;
+  }
+
   const user = await renderAuthArea();
 
   if (!user) {
@@ -15,7 +19,10 @@ async function initializeCreatePage() {
   writerInput.value = user.username;
 }
 
-saveBtn.addEventListener("click", async function () {
+if (createForm && titleInput && contentInput) {
+  createForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
   const title = titleInput.value.trim();
   const content = contentInput.value.trim();
 
@@ -35,6 +42,7 @@ saveBtn.addEventListener("click", async function () {
   } catch (error) {
     alert(error.message);
   }
-});
+  });
+}
 
 initializeCreatePage();
